@@ -1,8 +1,16 @@
 import { StatusBar } from "expo-status-bar";
+import { useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 
 export default function App() {
+  const [localizacao, setLocalizacao] = useState({
+    latitude: -33.867886,
+    longitude: -63.987,
+    latitudeDelta: 10,
+    longitudeDelta: 10,
+  });
+
   /* Coordenadas para o MapView */
   const regiaoInicialMapa = {
     /* // Brasil
@@ -20,24 +28,24 @@ export default function App() {
     longitudeDelta: 40,
   };
 
-  /* Coordenadas para o Marker que será
-  aplicado ao MapView */
-  const localizacao = {
-    latitude: -33.867886,
-    longitude: -63.987,
-    latitudeDelta: 10,
-    longitudeDelta: 10,
+  const marcarLocal = (event) => {
+    setLocalizacao({
+      ...localizacao, // usando para pegar/manter os deltas
+
+      // Obtendo novos valores a partir do evento de pressinar
+      latitude: event.nativeEvent.coordinate.latitude,
+      longitude: event.nativeEvent.coordinate.longitude,
+    });
   };
   return (
     <>
       <StatusBar style="auto" />
       <View style={styles.container}>
         <MapView
+          onPress={marcarLocal}
           mapType="standard"
           style={styles.mapa}
           initialRegion={regiaoInicialMapa}
-          // maxZoomLevel={15}
-          // minZoomLevel={5}
         >
           <Marker coordinate={localizacao}>
             <Image source={require(`./assets/ghost.png`)} />
