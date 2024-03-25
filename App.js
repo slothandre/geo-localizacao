@@ -72,7 +72,7 @@ export default function App() {
         </View>
         <View style={styles.viewMapa}>
           <MapView
-            mapType="standard"
+            mapType="hybrid"
             style={styles.mapa}
             region={localizacao ?? regiaoInicialMapa}
           >
@@ -87,12 +87,10 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: 50,
   },
   mapa: {
     width: "100%",
     height: "100%",
-  },
-  viewBotao: {
-    marginTop: 50,
   },
 });
