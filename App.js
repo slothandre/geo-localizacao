@@ -26,11 +26,10 @@ export default function App() {
       atual. E atualizamos o state de minhaLocalizacao. */
       let localizacaoAtual = await Location.getCurrentPositionAsync({});
 
-      setMinhaLocalizacao();
+      setMinhaLocalizacao(localizacaoAtual);
     }
+    obterLocalizacao();
   }, []);
-
-  console.log(minhaLocalizacao);
 
   /* Este state tem a finalidade de determinar
   a posição/localização no MapView junto com o Marker.
@@ -55,13 +54,13 @@ export default function App() {
     longitudeDelta: 40,
   };
 
-  const marcarLocal = (event) => {
+  const marcarLocal = () => {
     setLocalizacao({
-      ...localizacao, // usando para pegar/manter os deltas
-
-      // Obtendo novos valores a partir do evento de pressinar
-      latitude: event.nativeEvent.coordinate.latitude,
-      longitude: event.nativeEvent.coordinate.longitude,
+      // Obtendo novos valores a partir da geolocalização da posição do usuário
+      latitude: minhaLocalizacao.coords.latitude,
+      longitude: minhaLocalizacao.coords.longitude,
+      latitudeDelta: 0.02,
+      longitudeDelta: 0.01,
     });
   };
   return (
@@ -69,13 +68,13 @@ export default function App() {
       <StatusBar style="auto" />
       <View style={styles.container}>
         <View style={styles.viewBotao}>
-          <Button title="Onde estou?" onPress={marcarLocal} />
+          <Button title="Onde eu quase estou?" onPress={marcarLocal} />
         </View>
         <View style={styles.viewMapa}>
           <MapView
             mapType="standard"
             style={styles.mapa}
-            initialRegion={regiaoInicialMapa}
+            region={localizacao ?? regiaoInicialMapa}
           >
             {localizacao && <Marker coordinate={localizacao} />}
           </MapView>
@@ -92,5 +91,8 @@ const styles = StyleSheet.create({
   mapa: {
     width: "100%",
     height: "100%",
+  },
+  viewBotao: {
+    marginTop: 50,
   },
 });
